@@ -1,0 +1,174 @@
+<mxfile host="app.diagrams.net" agent="Kiro" version="24.0.0">
+  <diagram name="Low-Level Design" id="lld-google-search-v2">
+    <mxGraphModel dx="1420" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1750" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Google Search — Low-Level Design (Component Interfaces &amp; Data Models)" style="text;html=1;fontSize=20;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="620" y="20" width="900" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ROW 1: CRAWLER COMPONENTS -->
+        <mxCell id="rowCrawler" value="Crawler Components" style="text;html=1;fontSize=14;fontStyle=1;align=left;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="300" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="frontier" value="Frontier" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="140" width="320" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="fr1" value="+ add(url): AddResult" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="frontier"><mxGeometry y="28" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="fr2" value="+ next(): FrontierEntry | null" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="frontier"><mxGeometry y="56" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="fr3" value="+ contains(canonicalUrl): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="frontier"><mxGeometry y="84" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="fr4" value="+ reschedule(entry, retryCount)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="frontier"><mxGeometry y="112" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="fr5" value="- heap(-priority, url) + SeenSet" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="frontier"><mxGeometry y="140" width="320" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="robots" value="RobotsManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="460" y="140" width="340" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="rb1" value="+ ensurePolicy(host): RobotsPolicy" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="robots"><mxGeometry y="28" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="rb2" value="+ isAllowed(url): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="robots"><mxGeometry y="56" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="rb3" value="+ effectiveDelaySeconds(host): number" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="robots"><mxGeometry y="84" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="rb4" value="delay = clamp(max(min, crawlDelay),0.1,60)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="robots"><mxGeometry y="112" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="rb5" value="fetch policy before content; refresh if stale" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="robots"><mxGeometry y="140" width="340" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="fetcher" value="Fetcher" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="860" y="140" width="380" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ft1" value="+ fetch(entry, policy): FetchOutcome" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="fetcher"><mxGeometry y="28" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="ft2" value="FetchOutcome = Stored | Retry |" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="fetcher"><mxGeometry y="56" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="ft3" value="Redirect | FailedPermanent(reason)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="fetcher"><mxGeometry y="84" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="ft4" value="timeout [1,120]s; retries [1,10]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="fetcher"><mxGeometry y="112" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="ft5" value="redirects [1,20]; record status per attempt" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="fetcher"><mxGeometry y="140" width="380" height="28" as="geometry" /></mxCell>
+
+        <!-- ROW 2: PARSE / NORMALIZE / QUERY -->
+        <mxCell id="rowParse" value="Parsing &amp; Query Processing" style="text;html=1;fontSize=14;fontStyle=1;align=left;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="400" width="360" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="parser" value="Parser" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="440" width="340" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="+ parse(raw): ParsedDocument" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="parser"><mxGeometry y="28" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="p2" value="+ resolveDuplicate(hash, url): url" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="parser"><mxGeometry y="56" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="p3" value="extract text/links/title; contentHash" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="parser"><mxGeometry y="84" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="p4" value="dup -&gt; smallest Canonical_URL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="parser"><mxGeometry y="112" width="340" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="norm" value="normalize()  «shared pure fn»" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="480" y="440" width="360" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="normalize(text): Token[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="norm"><mxGeometry y="28" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="n2" value="1. Unicode NFKC" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="norm"><mxGeometry y="56" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="n3" value="2. case-fold  3. boundary split" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="norm"><mxGeometry y="84" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="n4" value="4. drop empties  5. collapse whitespace" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="norm"><mxGeometry y="112" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="n5" value="deterministic; used by Parser + QueryProcessor" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="norm"><mxGeometry y="140" width="360" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="qp" value="QueryProcessor" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="900" y="440" width="360" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="q1" value="+ parse(rawQuery): StructuredQuery" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="qp"><mxGeometry y="28" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="q2" value="+ serialize(q): string  (round-trip)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="qp"><mxGeometry y="56" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="q3" value="+ isEmpty(q): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="qp"><mxGeometry y="84" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="q4" value="truncate 2048; quote/op -&gt; literal token" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="qp"><mxGeometry y="112" width="360" height="28" as="geometry" /></mxCell>
+
+        <!-- ROW 3: INDEX / RETRIEVE / RANK / SERVE -->
+        <mxCell id="rowServe" value="Indexing &amp; Serving Components" style="text;html=1;fontSize=14;fontStyle=1;align=left;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="680" width="400" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="indexer" value="Indexer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="720" width="340" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="i1" value="+ index(doc): IndexResult" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="indexer"><mxGeometry y="28" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="i2" value="+ reindex(doc): IndexResult  (atomic)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="indexer"><mxGeometry y="56" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="i3" value="+ remove(docId): IndexResult" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="indexer"><mxGeometry y="84" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="i4" value="+ shardFor(docId): ShardId" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="indexer"><mxGeometry y="112" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="i5" value="per-Doc_ID segment + pointer swap" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="indexer"><mxGeometry y="140" width="340" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="cr" value="CandidateRetrieval" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="480" y="720" width="340" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="cr1" value="+ retrieve(q): RetrievalResult" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="cr"><mxGeometry y="28" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="cr2" value="{candidates, partial, missingShards}" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="cr"><mxGeometry y="56" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="cr3" value="AND intersect + phrase filter" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="cr"><mxGeometry y="84" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="cr4" value="shard union: one entry / Doc_ID" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="cr"><mxGeometry y="112" width="340" height="28" as="geometry" /></mxCell>
+        <mxCell id="cr5" value="200 ms shard deadline + failover" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="cr"><mxGeometry y="140" width="340" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="ranker" value="Ranker" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="880" y="720" width="360" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="rk1" value="+ rank(q, candidates): RankedResult[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="ranker"><mxGeometry y="28" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="rk2" value="score = clamp01(w_r*bm25 + w_a*authority)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="ranker"><mxGeometry y="56" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="rk3" value="order by (score desc, docId asc)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="ranker"><mxGeometry y="84" width="360" height="28" as="geometry" /></mxCell>
+        <mxCell id="rk4" value="deterministic; skip scoring failures" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="ranker"><mxGeometry y="112" width="360" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="serving" value="ServingLayer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="720" width="380" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="sl1" value="+ search(rawQuery, page, pageSize)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;" vertex="1" parent="serving"><mxGeometry y="28" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="sl2" value="   : SearchResultsPage" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=11;fontStyle=2;" vertex="1" parent="serving"><mxGeometry y="56" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="sl3" value="admission/rate-limit; emit metrics" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="serving"><mxGeometry y="84" width="380" height="28" as="geometry" /></mxCell>
+        <mxCell id="sl4" value="paginate: disjoint slices, &lt;= pageSize" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;overflow=hidden;fontSize=10;fontStyle=2;" vertex="1" parent="serving"><mxGeometry y="112" width="380" height="28" as="geometry" /></mxCell>
+
+        <!-- ROW 4: DATA MODELS -->
+        <mxCell id="dmtitle" value="Data Models" style="text;html=1;fontSize=14;fontStyle=1;align=left;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="960" width="200" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dmDoc" value="Document" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1000" width="320" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="docId: DocId (PK)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="28" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="d2" value="canonicalUrl: string" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="56" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="d3" value="title: string" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="84" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="d4" value="contentHash: string" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="112" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="d5" value="httpStatus / fetchTimestamp" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="140" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="d6" value="contentType: string" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="168" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="d7" value="indexState: enum" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmDoc"><mxGeometry y="196" width="320" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="dmPost" value="Posting / Posting_List" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1000" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pl1" value="term: string" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmPost"><mxGeometry y="28" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="pl2" value="docId: DocId (asc)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmPost"><mxGeometry y="56" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="pl3" value="positions: int[] (asc)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmPost"><mxGeometry y="84" width="320" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="dmShard" value="Shard (+ Replicas)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="840" y="1000" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sh1" value="shardId: ShardId (PK)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmShard"><mxGeometry y="28" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="sh2" value="docCount: int" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmShard"><mxGeometry y="56" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="sh3" value="replicationFactor: int (&gt;= 2)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmShard"><mxGeometry y="84" width="320" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="dmSQ" value="StructuredQuery" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="1000" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sq1" value="nodes: QueryNode[] (ordered)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSQ"><mxGeometry y="28" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="sq2" value="term | phrase | operator" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSQ"><mxGeometry y="56" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="sq3" value="phrase: ordered tokens" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSQ"><mxGeometry y="84" width="320" height="28" as="geometry" /></mxCell>
+
+        <mxCell id="dmSRP" value="SearchResultsPage" style="swimlane;fontStyle=1;align=center;verticalAlign=top;startSize=28;collapsible=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="1000" width="320" height="148" as="geometry" />
+        </mxCell>
+        <mxCell id="rp1" value="entries: ResultEntry[] (&lt;= pageSize)" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSRP"><mxGeometry y="28" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="rp2" value="status: PageStatus" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSRP"><mxGeometry y="56" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="rp3" value="page: int" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSRP"><mxGeometry y="84" width="320" height="28" as="geometry" /></mxCell>
+        <mxCell id="rp4" value="partialShardCount?: int" style="text;strokeColor=none;fillColor=none;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="dmSRP"><mxGeometry y="112" width="320" height="28" as="geometry" /></mxCell>
+
+        <!-- EDGES -->
+        <mxCell id="l1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="frontier" target="robots"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="robots" target="fetcher"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3" value="uses" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="parser" target="norm"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l4" value="uses" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="norm" target="qp"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l5" value="parsed doc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;exitX=0.25;exitY=1;entryX=0.25;entryY=0;" edge="1" parent="1" source="parser" target="indexer"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l6" value="StructuredQuery" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="qp" target="ranker"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l7" value="reads postings" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;fontSize=10;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="cr" target="indexer"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l8" value="candidates" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cr" target="ranker"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l9" value="ranked" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="ranker" target="serving"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l10" value="produces" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="indexer" target="dmDoc"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l11" value="returns" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="serving" target="dmSRP"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
