@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.searchengine.retrieval.PhraseMatcherTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-08-27T12:23:44.397Z" hostname="Ajays-MBP" time="0.01">
+  <properties/>
+  <testcase name="missingTokenDoesNotMatch()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="postingOverloadConsecutiveMatches()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.0"/>
+  <testcase name="postingOverloadEmptyPhraseMatches()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="emptyPhraseMatches()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.0"/>
+  <testcase name="wrongOrderDoesNotMatch()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.0"/>
+  <testcase name="postingOverloadGapDoesNotMatch()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="repeatedTokenPhraseMatches()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.0"/>
+  <testcase name="singleTokenPresentMatches()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="matchesAtLaterOccurrence()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="consecutivePhraseMatches()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="singleTokenMissingDoesNotMatch()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <testcase name="nonConsecutivePhraseDoesNotMatch()" classname="com.searchengine.retrieval.PhraseMatcherTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

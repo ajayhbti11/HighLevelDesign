@@ -17,7 +17,7 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
 
 ## Tasks
 
-- [ ] 1. Set up project structure, build tooling, and core types
+- [x] 1. Set up project structure, build tooling, and core types
   - Create a Maven/Gradle Java project with source and test source roots
   - Add JUnit 5 and jqwik (net.jqwik) test dependencies; configure the test runner to allow tag comments
   - Define shared value types and enums used across components: `DocId`, `ShardId`, `Token`,
@@ -27,8 +27,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     `serving`, `controlplane`, `observability`, `common`
   - _Requirements: 5.3, 5.7, 3.1, 4.4, 11.2_
 
-- [ ] 2. Implement shared normalization (single source of truth)
-  - [ ] 2.1 Implement the pure `normalize(String)` -> `List<Token>` procedure
+- [x] 2. Implement shared normalization (single source of truth)
+  - [x] 2.1 Implement the pure `normalize(String)` -> `List<Token>` procedure
     - Apply Unicode NFKC, case-fold, split on Unicode whitespace/punctuation boundaries, drop empty
       tokens, collapse repeated whitespace; must be a pure deterministic function
     - This same function is later consumed by both Parser and Query_Processor
@@ -41,8 +41,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Generators must include non-ASCII/Unicode text, empty content, and whitespace-only input
     - Min 100 iterations; tag `Feature: google-search, Property 14: Shared deterministic normalization`
 
-- [ ] 3. Implement URL canonicalization (pure)
-  - [ ] 3.1 Implement `canonicalize(url)` producing a Canonical_URL or INVALID
+- [x] 3. Implement URL canonicalization (pure)
+  - [x] 3.1 Implement `canonicalize(url)` producing a Canonical_URL or INVALID
     - Validate absolute URL; lowercase scheme/host, punycode host, strip trailing dot, drop default
       port, remove dot-segments, percent-decode unreserved, collapse `//`, default empty path to `/`,
       drop tracking params, sort query params, drop fragment; deterministic total function
@@ -53,12 +53,12 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
       relative URLs return INVALID
     - _Requirements: 1.2, 1.6_
 
-- [ ] 4. Implement Frontier and SeenSet data structures
-  - [ ] 4.1 Implement `SeenSet` (bloom filter + exact hash set) with Content_Store membership hook
+- [x] 4. Implement Frontier and SeenSet data structures
+  - [x] 4.1 Implement `SeenSet` (bloom filter + exact hash set) with Content_Store membership hook
     - Fast-negative bloom plus exact set to avoid false-positive drops; `contains(canonicalUrl)`
     - _Requirements: 1.3, 1.6_
 
-  - [ ] 4.2 Implement `Frontier` over a priority queue keyed `(-priority, canonicalUrl)`
+  - [x] 4.2 Implement `Frontier` over a priority queue keyed `(-priority, canonicalUrl)`
     - `add` (validates + dedups via canonicalize + SeenSet, returns AddResult), `next` (pops highest
       priority, ascending Canonical_URL tie-break, removes entry), `contains`, `reschedule`, `size`
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
@@ -83,11 +83,11 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - **Validates: Requirements 1.5**
     - Min 100 iterations; tag `Feature: google-search, Property 3: Selection removes from Frontier`
 
-- [ ] 5. Checkpoint - Ensure all tests pass
+- [x] 5. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 6. Implement inverted index data structures and construction (pure core)
-  - [ ] 6.1 Implement `Posting`/`Posting_List` and per-Doc_ID segment builder
+- [x] 6. Implement inverted index data structures and construction (pure core)
+  - [x] 6.1 Implement `Posting`/`Posting_List` and per-Doc_ID segment builder
     - `buildSegment(doc)` maps term -> ascending positions; posting lists keep ascending Doc_IDs and
       ascending positions; delta/varint encoding for storage
     - _Requirements: 5.1, 5.2_
@@ -99,7 +99,7 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Index/candidate generator with positions; min 100 iterations
     - Tag `Feature: google-search, Property 17: Indexing populates postings and positions`
 
-  - [ ] 6.3 Implement monotonic Doc_ID allocator and consistent-hash shard map
+  - [x] 6.3 Implement monotonic Doc_ID allocator and consistent-hash shard map
     - `shardFor(docId) = hash(docId) mod shardCount`; unique monotonic Doc_ID allocation
     - _Requirements: 5.3, 5.7_
 
@@ -115,8 +115,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - **Validates: Requirements 5.7**
     - Min 100 iterations; tag `Feature: google-search, Property 22: Each Doc_ID lives in exactly one Shard`
 
-- [ ] 7. Implement phrase / positional matching (pure)
-  - [ ] 7.1 Implement `phraseMatches(doc, phraseTokens)` consecutive-position check
+- [x] 7. Implement phrase / positional matching (pure)
+  - [x] 7.1 Implement `phraseMatches(doc, phraseTokens)` consecutive-position check
     - Returns true iff all phrase tokens appear at consecutive positions with no gaps; any missing
       token -> false
     - _Requirements: 8.2_
@@ -127,8 +127,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - **Validates: Requirements 8.2**
     - Min 100 iterations; tag `Feature: google-search, Property 30: Phrase adjacency candidate membership`
 
-- [ ] 8. Implement ranking order and scoring (pure core)
-  - [ ] 8.1 Implement `Ranker.rank` scoring + total-order sort
+- [x] 8. Implement ranking order and scoring (pure core)
+  - [x] 8.1 Implement `Ranker.rank` scoring + total-order sort
     - `score = clamp01(w_r*bm25Norm + w_a*authorityNorm)` with `w_r + w_a = 1`; both components in
       `[0,1]`; sort by `(score desc, docId asc)`; empty candidates -> empty page; on per-doc scoring
       exception, skip doc + record failure + preserve remaining order
@@ -170,8 +170,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Empty candidate set produces an empty ordered page without error
     - _Requirements: 10.6_
 
-- [ ] 9. Implement pagination and result assembly (pure)
-  - [ ] 9.1 Implement `paginate(ranked, page, pageSize)` and Result_Entry assembly
+- [x] 9. Implement pagination and result assembly (pure)
+  - [x] 9.1 Implement `paginate(ranked, page, pageSize)` and Result_Entry assembly
     - Invalid page (<1 or non-integer) -> `invalidPage`; start beyond end -> `noFurtherResults`;
       otherwise contiguous disjoint slice of <= pageSize; assemble title/Canonical_URL/snippet with
       substitution (missing title -> Canonical_URL, missing snippet -> empty string)
@@ -198,8 +198,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
 - [ ] 10. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 11. Implement Query_Processor
-  - [ ] 11.1 Implement `parse`, `serialize`, `isEmpty` over the QueryNode tree
+- [x] 11. Implement Query_Processor
+  - [x] 11.1 Implement `parse`, `serialize`, `isEmpty` over the QueryNode tree
     - Truncate normalized length to 2048 first; share `normalize()`; preserve quoted phrases as
       ordered phrase nodes; interpret supported operators per grammar; unbalanced quote -> literal
       token; unsupported operator -> literal token; empty-after-normalization detection
@@ -239,14 +239,14 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Empty/whitespace-only query -> `noQueryTerms`; query normalized length > 2048 truncated first
     - _Requirements: 7.4, 7.8_
 
-- [ ] 12. Implement Parser subsystem
-  - [ ] 12.1 Implement `Parser.parse` (text/links/title extraction + normalization + hashing)
+- [x] 12. Implement Parser subsystem
+  - [x] 12.1 Implement `Parser.parse` (text/links/title extraction + normalization + hashing)
     - Extract human-readable text excluding markup/scripts/styles; extract outbound links and title;
       normalize via shared `normalize()`; compute contentHash; set parse-failure status for
       unsupported content type or too-large documents (skip indexing)
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-  - [ ] 12.2 Implement `resolveDuplicate` (content-hash index -> smallest Canonical_URL)
+  - [x] 12.2 Implement `resolveDuplicate` (content-hash index -> smallest Canonical_URL)
     - Register contentHash; collapse duplicates to lexicographically smallest Canonical_URL
     - _Requirements: 4.6_
 
@@ -274,8 +274,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Document at/over configured max parseable size records parse-failure and skips indexing
     - _Requirements: 4.5_
 
-- [ ] 13. Implement Indexer subsystem (build / atomic replace / delete)
-  - [ ] 13.1 Implement `index`, `reindex` (atomic pointer swap), `remove`
+- [x] 13. Implement Indexer subsystem (build / atomic replace / delete)
+  - [x] 13.1 Implement `index`, `reindex` (atomic pointer swap), `remove`
     - `index` assigns unique Doc_ID and populates postings/positions; `reindex` builds a new
       per-Doc_ID segment and swaps a pointer under a per-shard lock so no query sees mixed state;
       `remove` deletes all postings referencing the Doc_ID; failure discards the new segment and
@@ -301,7 +301,7 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Generator injects mid-update failures; min 100 iterations
     - Tag `Feature: google-search, Property 21: Indexing failure reverts to prior state`
 
-- [ ] 14. Checkpoint - Ensure all tests pass
+- [x] 14. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 15. Implement Candidate_Retrieval and shard merge
@@ -329,8 +329,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Query with no satisfying document returns empty page with `noMatches` status
     - _Requirements: 8.4_
 
-- [ ] 16. Implement Robots Manager
-  - [ ] 16.1 Implement `ensurePolicy`, `isAllowed`, `effectiveDelaySeconds`
+- [x] 16. Implement Robots Manager
+  - [x] 16.1 Implement `ensurePolicy`, `isAllowed`, `effectiveDelaySeconds`
     - Fetch/record policy before content fetch; refresh when older than refresh interval; longest-match
       allow/disallow decision; effective delay `clamp(max(minDelay, crawlDelay), 0.1, 60)`; treat
       fetch failure/malformed/not-found as no restrictions using min delay, recording the condition
@@ -418,11 +418,11 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Generator produces change/no-change sequences; min 100 iterations
     - Tag `Feature: google-search, Property 23: Adaptive re-fetch interval direction and bounds`
 
-- [ ] 19. Checkpoint - Ensure all tests pass
+- [x] 19. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 20. Implement sharding/replication control plane
-  - [ ] 20.1 Implement replica selection and shard scale-out/rebalancing
+- [x] 20. Implement sharding/replication control plane
+  - [x] 20.1 Implement replica selection and shard scale-out/rebalancing
     - Health-tracked replica set per shard; `pickHealthyReplica`; add shards when docs-per-shard
       exceeds max; consistent-hash reassignment keeping each Doc_ID in exactly one shard with no loss
       or duplication; record capacity-exhaustion when no capacity can be provisioned
@@ -460,8 +460,8 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - When no shard/replica capacity can be provisioned, a capacity-exhaustion condition is recorded
     - _Requirements: 14.4_
 
-- [ ] 21. Implement Observability (metrics, error records, admission counters)
-  - [ ] 21.1 Implement metric/error recording with non-aborting failure handling
+- [x] 21. Implement Observability (metrics, error records, admission counters)
+  - [x] 21.1 Implement metric/error recording with non-aborting failure handling
     - Record per-query latency + result count; record crawl-cycle and index-cycle counts; record
       error records (component, operation, cause, timestamp); if recording fails, complete the
       primary operation and record a recording-failure indication
@@ -487,7 +487,7 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Tag `Feature: google-search, Property 47: Recording failure never aborts the primary operation`
 
 - [ ] 22. Implement Serving Layer and wire the serving plane together
-  - [ ] 22.1 Implement `ServingLayer.search` orchestration + admission control
+  - [-] 22.1 Implement `ServingLayer.search` orchestration + admission control
     - Wire admission/rate-limit (reject excess -> `overloaded`) -> Query_Processor.parse ->
       Candidate_Retrieval (per-shard 200 ms deadline via control plane + failover) -> Ranker ->
       paginate/assemble -> emit metrics; map statuses (noQueryTerms, noMatches, noFurtherResults,
@@ -509,7 +509,7 @@ Test sub-tasks are marked optional with `*`. Core implementation tasks are never
     - Tag `Feature: google-search, Property 40: Partial results on shard timeout`
 
 - [ ] 23. Wire the indexing plane together
-  - [ ] 23.1 Connect Crawler pipeline end to end in code
+  - [-] 23.1 Connect Crawler pipeline end to end in code
     - Wire Frontier -> RobotsManager -> Fetcher -> Content_Store -> Parser -> Indexer -> Inverted_Index
       and feed Parser-discovered links + Re-fetch Scheduler back into the Frontier; connect Indexer to
       the control-plane shard map and Observability cycle counters

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.searchengine.index.PostingListTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-08-27T12:23:44.346Z" hostname="Ajays-MBP" time="0.021">
+  <properties/>
+  <testcase name="removeDocDeletesAllReferences()" classname="com.searchengine.index.PostingListTest" time="0.015"/>
+  <testcase name="keepsPostingsInAscendingDocIdOrder()" classname="com.searchengine.index.PostingListTest" time="0.002"/>
+  <testcase name="emptyByDefault()" classname="com.searchengine.index.PostingListTest" time="0.001"/>
+  <testcase name="mergesPositionsForSameDocIdAndKeepsThemAscending()" classname="com.searchengine.index.PostingListTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

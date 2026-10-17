@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.searchengine'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit 5 (Jupiter) for unit/example tests
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // jqwik for property-based testing
+    testImplementation 'net.jqwik:jqwik:1.8.4'
+}
+
+test {
+    useJUnitPlatform {
+        // Allow both JUnit Jupiter and jqwik engines
+        includeEngines 'junit-jupiter', 'jqwik'
+    }
+
+    // Configure jqwik to run a minimum of 100 iterations per property by default.
+    systemProperty 'jqwik.tries.default', '100'
+
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+    }
+}
