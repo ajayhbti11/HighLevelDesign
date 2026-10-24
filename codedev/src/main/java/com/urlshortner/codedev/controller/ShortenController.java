@@ -4,6 +4,7 @@ import com.urlshortner.codedev.entity.UrlMapping;
 import com.urlshortner.codedev.service.UrlService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +41,7 @@ public class ShortenController {
     }
 
     public record ShortenRequest(
-            @NotBlank String longUrl,
+            @NotBlank @Size(max = 2048) String longUrl,
             Instant expiresAt
     ) {}
 

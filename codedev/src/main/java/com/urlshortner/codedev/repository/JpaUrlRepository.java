@@ -17,7 +17,7 @@ import java.util.Optional;
 public class JpaUrlRepository implements UrlRepository {
 
     // Inner Spring Data JPA repository
-    interface UrlJpaRepository extends JpaRepository<UrlMapping, String> {
+    public interface UrlJpaRepository extends JpaRepository<UrlMapping, String> {
         Optional<UrlMapping> findByShortCode(String shortCode);
 
         boolean existsByShortCode(String shortCode);

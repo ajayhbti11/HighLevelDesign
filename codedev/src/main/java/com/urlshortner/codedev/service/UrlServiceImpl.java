@@ -12,6 +12,8 @@ import com.urlshortner.codedev.repository.UrlRepository;
 import com.urlshortner.codedev.utils.UrlStatus;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
@@ -92,11 +94,17 @@ public class UrlServiceImpl implements UrlService {
         if (url == null || url.isBlank()) {
             throw new IllegalArgumentException("URL must not be blank");
         }
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            throw new IllegalArgumentException("URL must use http or https scheme");
-        }
         if (url.length() > 2048) {
-            throw new IllegalArgumentException("URL exceeds maximum length of 2048");
+            throw new IllegalArgumentException("URL exceeds maximum length");
+        }
+        try {
+            URI parsed = new URI(url);
+            String scheme = parsed.getScheme();
+            if (!"http".equals(scheme) && !"https".equals(scheme)) {
+                throw new IllegalArgumentException("Only http and https URLs are allowed");
+            }
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL format");
         }
     }
 }
